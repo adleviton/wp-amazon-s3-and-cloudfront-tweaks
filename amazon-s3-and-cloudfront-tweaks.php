@@ -70,7 +70,7 @@ class Amazon_S3_and_CloudFront_Tweaks
     //add_filter( 'as3cf_upload_acl', array( $this, 'upload_acl' ), 10, 3 );
     //add_filter( 'as3cf_upload_acl_sizes', array( $this, 'upload_acl_sizes' ), 10, 4 );
     add_filter('as3cf_object_meta', [$this, 'object_meta'], 10, 4);
-    // add_filter('as3cf_attachment_file_paths', [$this, 'attachment_file_paths'], 10, 3);
+    add_filter('as3cf_attachment_file_paths', [$this, 'attachment_file_paths'], 10, 3);
     //add_filter( 'as3cf_upload_attachment_local_files_to_remove', array( $this, 'upload_attachment_local_files_to_remove' ), 10, 3 );
     //add_filter( 'as3cf_preserve_file_from_local_removal', array( $this, 'preserve_file_from_local_removal' ), 10, 2 );
 
@@ -391,10 +391,11 @@ class Amazon_S3_and_CloudFront_Tweaks
     //   $args['Key'] = 'movies/'.$filename;
     // }
 
-    $meta = get_post_meta($post_id, '_wp_attached_file', true);
-    $path = WP_CONTENT_DIR."/uploads/$meta";
-    if ($file_exists = is_file($path)) {
-      $args['Key'] = $meta;
+    $path = pathinfo(get_post_meta($post_id, '_wp_attached_file', true));
+    $name = basename($args['SourceFile']);
+    $file = WP_CONTENT_DIR."/uploads/{$path['dirname']}/$name";
+    if ($file_exists = is_file($file)) {
+      $args['Key'] = "{$path['dirname']}/$name";
     }
 
     return $args;
