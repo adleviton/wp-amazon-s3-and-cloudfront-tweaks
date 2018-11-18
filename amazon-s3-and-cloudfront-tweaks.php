@@ -79,7 +79,7 @@ class Amazon_S3_and_CloudFront_Tweaks
      */
     //add_filter( 'as3cf_local_domains', array( $this, 'local_domains' ), 10, 1 );
     //add_filter( 'as3cf_use_ssl', array( $this, 'use_ssl' ), 10, 1 );
-    // add_filter('as3cf_get_attachment_url', [$this, 'get_attachment_url'], 10, 4);
+    add_filter('as3cf_get_attachment_url', [$this, 'get_attachment_url'], 10, 4);
     //add_filter( 'as3cf_wp_get_attachment_url', array( $this, 'wp_get_attachment_url' ), 10, 2 );
 		//add_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'get_attached_file_copy_back_to_local' ), 10, 3 );
 		//add_filter( 'as3cf_expires', array( $this, 'default_expires' ), 10, 1 );
@@ -546,14 +546,18 @@ class Amazon_S3_and_CloudFront_Tweaks
    */
   public function get_attachment_url($url, $provider_object, $post_id, $expires)
   {
-    // Example changes domain to another CDN configured for dedicated movies bucket.
-    if ('my-cheaper-infrequent-access-bucket' === $provider_object['bucket']) {
-      // Get current hostname in URL.
-      $hostname = parse_url($url, PHP_URL_HOST);
+    // // Example changes domain to another CDN configured for dedicated movies bucket.
+    // if ('my-cheaper-infrequent-access-bucket' === $provider_object['bucket']) {
+    //   // Get current hostname in URL.
+    //   $hostname = parse_url($url, PHP_URL_HOST);
+    //
+    //   // Replace hostname in URL (only if not adorned with port or username/password in this example).
+    //   $url = str_replace('//'.$hostname.'/', '//movies.example.com/', $url);
+    // }
 
-      // Replace hostname in URL (only if not adorned with port or username/password in this example).
-      $url = str_replace('//'.$hostname.'/', '//movies.example.com/', $url);
-    }
+    $post = get_post($post_id);
+    $timestamp = !empty($post) ? strtotime($post->post_modified) : time();
+    $url = "$url?v=$timestamp";
 
     return $url;
   }
