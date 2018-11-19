@@ -70,7 +70,7 @@ class Amazon_S3_and_CloudFront_Tweaks
     //add_filter( 'as3cf_upload_acl', array( $this, 'upload_acl' ), 10, 3 );
     //add_filter( 'as3cf_upload_acl_sizes', array( $this, 'upload_acl_sizes' ), 10, 4 );
     add_filter('as3cf_object_meta', [$this, 'object_meta'], 10, 4);
-    add_filter('as3cf_attachment_file_paths', [$this, 'attachment_file_paths'], 10, 3);
+    // add_filter('as3cf_attachment_file_paths', [$this, 'attachment_file_paths'], 10, 3);
     //add_filter( 'as3cf_upload_attachment_local_files_to_remove', array( $this, 'upload_attachment_local_files_to_remove' ), 10, 3 );
     //add_filter( 'as3cf_preserve_file_from_local_removal', array( $this, 'preserve_file_from_local_removal' ), 10, 2 );
 
@@ -79,9 +79,9 @@ class Amazon_S3_and_CloudFront_Tweaks
      */
     //add_filter( 'as3cf_local_domains', array( $this, 'local_domains' ), 10, 1 );
     //add_filter( 'as3cf_use_ssl', array( $this, 'use_ssl' ), 10, 1 );
-    add_filter('as3cf_get_attachment_url', [$this, 'get_attachment_url'], 10, 4);
-    //add_filter( 'as3cf_wp_get_attachment_url', array( $this, 'wp_get_attachment_url' ), 10, 2 );
-		//add_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'get_attached_file_copy_back_to_local' ), 10, 3 );
+    // add_filter('as3cf_get_attachment_url', [$this, 'get_attachment_url'], 90, 4);
+    // add_filter('as3cf_wp_get_attachment_url', [$this, 'wp_get_attachment_url'], 10, 2);
+    //add_filter( 'as3cf_get_attached_file_copy_back_to_local', array( $this, 'get_attached_file_copy_back_to_local' ), 10, 3 );
 		//add_filter( 'as3cf_expires', array( $this, 'default_expires' ), 10, 1 );
 		//add_filter( 'as3cf_cloudfront_path_parts', array( $this, 'cloudfront_path_parts' ), 10, 2 );
 
@@ -554,10 +554,6 @@ class Amazon_S3_and_CloudFront_Tweaks
     //   // Replace hostname in URL (only if not adorned with port or username/password in this example).
     //   $url = str_replace('//'.$hostname.'/', '//movies.example.com/', $url);
     // }
-
-    $post = get_post($post_id);
-    $timestamp = !empty($post) ? strtotime($post->post_modified) : time();
-    $url = "$url?v=$timestamp";
 
     return $url;
   }
